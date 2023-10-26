@@ -51,6 +51,7 @@ with open(covid19world, 'r') as file:
 
 with open(worldpopulation, 'r') as file:
     world_population = json.load(file)
+# print(world_population)
 
 
 def insert_json_data_to_postgres(json_data, table_name, cur):
@@ -92,42 +93,52 @@ def insert_json_data_to_postgres(json_data, table_name, cur):
 
 # world population
 def create_table_from_json(json_data, table_name, cur):
-    # formatting of the dictionary
-    for item in json_data:
-        if 'Density (P' in item:
-            density_value = item.pop('Density (P')
-            if "Km²)" in density_value:
-                item['Density (P/Km²)'] = { "Km²": density_value["Km²)"] }
-
-    # Save the modified data back to the JSON file
-    with open(worldpopulation, 'w') as file:
-        json.dump(json_data, file, indent=4)
+    cur.execute(f"DROP TABLE IF EXISTS {table_name}")
 
     # Ensure the structure of the JSON data and the keys match the expected format
+    # if isinstance(data, dict):
+    cur.execute(f'''
+            CREATE TABLE {table_name} (
+            country VARCHAR(255),
+            population INTEGER,
+            yearly_change VARCHAR(255),
+            net_change INTEGER,
+            density INTEGER,
+            land_area INTEGER,
+            migrants_net INTEGER,
+            fert_rate VARCHAR(255),
+            med_age VARCHAR(255),
+            urban_pop_percent VARCHAR(255),
+            world_share VARCHAR(255)
+        )'''
+    )
     for data in json_data:
-        if isinstance(data, dict):
-            cur.execute(f"""
-                INSERT INTO {table_name} (
-                    country_or_dependency, population_2020, yearly_change, net_change, density_per_km2, land_area_km2, migrants_net, fertility_rate, median_age, urban_pop_percentage, world_share
-                ) VALUES (
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-                )""", (
-                    data.get('Country (or dependency)'),
-                    data.get('Population (2020)'),
-                    data.get('Yearly Change'),
-                    data.get('Net Change'),
-                    data.get('Density (P', {}).get('Km²'),
-                    data.get('Land Area (Km²)'),
-                    data.get('Migrants (net)'),
-                    data.get('Fert. Rate'),
-                    data.get('Med. Age'),
-                    data.get('Urban Pop %'),
-                    data.get('World Share')
-                )
+        cur.execute(f"""
+            INSERT INTO {table_name} (
+                country, population, yearly_change, net_change, density,
+                land_area, migrants_net, fert_rate, med_age, urban_pop_percent, world_share
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            )""", (
+                data['Country (or dependency)'],
+                data['Population (2020)'] if data['Population (2020)'] else None,
+                data['Yearly Change'],
+                data['Net Change'] if data['Net Change'] else None ,
+                data['Density'] if 'Density' in data else None,
+                data['Land Area'] if data['Land Area'] else None ,
+                data['Migrants (net)'] if  data['Migrants (net)'] else None ,
+                data['Fert. Rate'] if data['Fert. Rate'] else None ,
+                data['Med. Age'] if data['Med. Age'] else None ,
+                data['Urban Pop %'] if data['Urban Pop %'] else None ,
+                data['World Share'] if data['World Share'] else None 
             )
         
+        )
+        
 # test dataset
+
 def create_test_table_from_json(json_data, table_name, cur):
+    print('hey')
     # Drop the table if it already exists
     cur.execute(f"DROP TABLE IF EXISTS {table_name}")
 
@@ -142,35 +153,53 @@ def create_test_table_from_json(json_data, table_name, cur):
             one_test_every_x_people VARCHAR(255)
         )
     ''')
-
+    # count=0
     # Insert data into the table
+    for item in json_data:
+        if 'TotalTests' in item and item['TotalTests'] == 'NA':
+            item['TotalTests'] = None
+        if 'Tests' in item and '1M pop' in item['Tests'] and item['Tests']['1M pop'] == 'NA':
+            item['Tests']['1M pop'] = None
+        if '1 Testevery X ppl' in item and item['1 Testevery X ppl'] == 'NA':
+            item['1 Testevery X ppl'] = None
+
+    with open(covid19tests, 'w') as file:
+        json.dump(json_data, file, indent=4)
+
     for data in json_data:
-        cur.execute("""
-            INSERT INTO {} (
-                date, country_other, total_tests, population, tests_per_1m_pop, one_test_every_x_people
+        # Insert the data into the table
+        cur.execute(f"""
+            INSERT INTO {table_name} (
+                date, country_or_other, total_tests, population, tests_per_1m_pop, test_every_x_ppl
             ) VALUES (
                 %s, %s, %s, %s, %s, %s
-            )""".format(table_name), (
+            )""", (
                 data['Date'],
                 data['Country,Other'],
                 data['TotalTests'],
                 data['Population'],
                 data['Tests']['1M pop'],
-                data.get('1 Testevery X ppl', None)
+                data['1 Testevery X ppl']
             )
         )
 
 # Call the function with the JSON data, table name, and cursor
-insert_json_data_to_postgres(covid19africa, "covid19africa", cur)
-insert_json_data_to_postgres(covid19asia, 'covid19_asia', cur)
-insert_json_data_to_postgres(covid19europe, 'covid19_europe', cur)
-insert_json_data_to_postgres(covid19northamerica, 'covid19_northamerica', cur)
-insert_json_data_to_postgres(covid19southamerica, 'covid19_southamerica', cur)
-insert_json_data_to_postgres(covid19world, 'covid19_world', cur)
-create_table_from_json(worldpopulation, 'world_population', cur)
-create_test_table_from_json(covid19tests, 'covid19_tests', cur)
+insert_json_data_to_postgres(covid19_africa, "covid19africa", cur)
+insert_json_data_to_postgres(covid19_asia, 'covid19_asia', cur)
+insert_json_data_to_postgres(covid19_europe, 'covid19_europe', cur)
+insert_json_data_to_postgres(covid19_northamerica, 'covid19_northamerica', cur)
+insert_json_data_to_postgres(covid19_southamerica, 'covid19_southamerica', cur)
+insert_json_data_to_postgres(covid19_world, 'covid19_world', cur)
+create_table_from_json(world_population, 'world_population', cur)
 
+# Work on this!
+# create_test_table_from_json(covid19tests, 'covid19_tests', cur)
 
 # Commit the changes and close the connection
+
+# Queries
+
+
+
 conn.commit()
 conn.close()
