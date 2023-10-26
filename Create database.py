@@ -155,7 +155,6 @@ cur = conn.cursor()
 for data in complete_json_list:
     cur.execute('''
     CREATE TABLE IF NOT EXISTS covid_data (
-        id SERIAL PRIMARY KEY,
         date DATE,
         state VARCHAR(255),
         latitude FLOAT,
