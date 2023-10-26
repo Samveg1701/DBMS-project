@@ -134,6 +134,10 @@ def create_table_from_json(json_data, table_name, cur):
             )
         
         )
+    cur.execute(f"SELECT * FROM world_population")
+    records = cur.fetchall()
+    for record in records:
+        print(records)
         
 # test dataset
 
@@ -183,6 +187,7 @@ def create_test_table_from_json(json_data, table_name, cur):
             )
         )
 
+
 # Call the function with the JSON data, table name, and cursor
 insert_json_data_to_postgres(covid19_africa, "covid19africa", cur)
 insert_json_data_to_postgres(covid19_asia, 'covid19_asia', cur)
@@ -198,6 +203,7 @@ create_table_from_json(world_population, 'world_population', cur)
 # Commit the changes and close the connection
 
 # Queries
+
 
 
 
