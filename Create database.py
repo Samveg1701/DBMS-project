@@ -134,12 +134,17 @@
 
 import psycopg2
 import json
+from datetime import datetime
 
-dataset = 'C:/Users/asus/Downloads/complete.json'
+# C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/DBMS project/complete.json
+complete = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/DBMS project/complete.json'
+nation_level_daily = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/DBMS project/nation_level_daily.json'
+state_level_daily = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/DBMS project/state_level_daily.json'
+test_day_wise = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/DBMS project/tests_day_wise.json'
 
 # Read the JSON data from the file
-with open(dataset, 'r') as file:
-    json_list = json.load(file)
+with open(complete, 'r') as file:
+    complete_json_list = json.load(file)
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect(
@@ -147,7 +152,7 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 # Iterate over the JSON objects and insert them into the table
-for data in json_list:
+for data in complete_json_list:
     cur.execute('''
     CREATE TABLE IF NOT EXISTS covid_data (
         id SERIAL PRIMARY KEY,
@@ -164,8 +169,9 @@ for data in json_list:
     )
 ''')
 
+
 # Insert data from each JSON object in the list into the table
-for data in json_list:
+for data in complete_json_list:
     records = cur.execute("""
         INSERT INTO covid_data (
             date, state, latitude, longitude, total_confirmed_cases, death, discharged_migrated, new_cases, new_deaths, new_recovered
@@ -184,9 +190,139 @@ for data in json_list:
             int(data['New recovered'])
         )
     )
-cur.execute("Select * from covid_data")
-records2 = cur.fetchall()
-print(records2)
+
+
+# national level daily being input here
+with open(nation_level_daily, 'r') as file:
+    national_json_data = json.load(file)
+
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS nation_level_daily (
+        date VARCHAR(20),
+        daily_confirmed INTEGER,
+        total_confirmed INTEGER,
+        daily_recovered INTEGER,
+        total_recovered INTEGER,
+        daily_deceased INTEGER,
+        total_deceased INTEGER
+    )
+''')
+# Insert data from each JSON object in the list into the table
+for data in national_json_data:
+    cur.execute("""
+        INSERT INTO nation_level_daily (
+            date, daily_confirmed, total_confirmed, daily_recovered, total_recovered, daily_deceased, total_deceased
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, %s
+        )""", (
+            data['Date'],
+            data['Daily Confirmed'],
+            data['Total Confirmed'],
+            data['Daily Recovered'],
+            data['Total Recovered'],
+            data['Daily Deceased'],
+            data['Total Deceased']
+        )
+    )
+
+
+# state level daily 
+with open(state_level_daily, 'r') as file:
+    state_level_daily_data = json.load(file)
+
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS state_level_daily (
+        id SERIAL PRIMARY KEY,
+        field1 INTEGER,
+        date DATE,
+        state VARCHAR(255),
+        confirmed INTEGER,
+        deceased INTEGER,
+        recovered INTEGER,
+        state_name VARCHAR(255)
+    )
+''')
+
+# Insert data from each JSON object in the list into the table
+for data in state_level_daily_data:
+    cur.execute("""
+        INSERT INTO state_level_daily (
+            field1, date, state, confirmed, deceased, recovered, state_name
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, %s
+        )""", (
+            data['FIELD1'],
+            data['Date'],
+            data['State'],
+            data['Confirmed'],
+            data['Deceased'],
+            data['Recovered'],
+            data['State_Name']
+        )
+    )
+
+# test day wise
+with open(test_day_wise, 'r') as file:
+    test_day_wise_data = json.load(file)
+
+cur.execute("DROP TABLE IF EXISTS test_day_wise")
+# Create the table if it does not already exist
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS test_day_wise (
+        update_time_stamp VARCHAR,
+        tested_as_of VARCHAR,
+        total_samples_tested INTEGER,
+        total_individuals_tested INTEGER,
+        total_positive_cases VARCHAR,
+        tests_conducted_by_private_labs INTEGER,
+        sample_reported_today VARCHAR(255),
+        positive_cases_from_samples_reported INTEGER,
+        source VARCHAR(255),
+        source_1 VARCHAR(255),
+        test_positivity_rate VARCHAR(255),
+        individuals_tested_per_confirmed_case FLOAT,
+        tests_per_confirmed_case FLOAT,
+        tests_per_million INTEGER
+    )
+''')
+
+# Iterate over the JSON objects and insert them into the table
+for data in test_day_wise_data:
+    cur.execute("""
+        INSERT INTO test_day_wise (
+            update_time_stamp, tested_as_of, total_samples_tested, total_individuals_tested, total_positive_cases,
+            tests_conducted_by_private_labs, sample_reported_today, positive_cases_from_samples_reported, source,
+            source_1, test_positivity_rate, individuals_tested_per_confirmed_case, tests_per_confirmed_case, tests_per_million
+        ) VALUES (
+             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+        )""", (
+            data['Update Time Stamp'],
+            data['Tested As Of'] if data['Tested As Of'] else None,
+            data['Total Samples Tested'] if data['Total Samples Tested'] else None,
+            data['Total Individuals Tested'] if data['Total Individuals Tested'] else None,
+            data['Total Positive Cases'] if data['Total Positive Cases'] else None,
+            data['Tests conducted by Private Labs'] if data['Tests conducted by Private Labs'] else None,
+            data['Sample Reported today'] if data['Sample Reported today'] != "" else None,
+            data['Positive cases from samples reported'] if data['Positive cases from samples reported'] else None,
+            data['Source'] if data['Source'] != "" else None,
+            data['Source 1'] if data['Source 1'] != "" else None,
+            data['Test positivity rate'] if data['Test positivity rate'] != "" else None,
+            data['Individuals Tested Per Confirmed Case'] if data['Individuals Tested Per Confirmed Case'] else None,
+            data['Tests Per Confirmed Case'] if data['Tests Per Confirmed Case'] else None,
+            data['Tests per million'] if data['Tests per million'] else None
+        )
+    )
+
+
+cur.execute("Select * from test_day_wise")
+# complete_data = cur.fetchall()
+state_data = cur.fetchall()
+
+print(state_data)
+
+
+
+# print('hey')
 
 conn.commit()
 conn.close()
