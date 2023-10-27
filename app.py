@@ -52,3 +52,14 @@ if __name__ == '__main__':
     # This should be changed later  
     app.run(host='0.0.0.0', debug=True)
     
+#Login route
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+
+
+
+
+
