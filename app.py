@@ -52,12 +52,47 @@ if __name__ == '__main__':
     # This should be changed later  
     app.run(host='0.0.0.0', debug=True)
     
-#Login route
+#Admin Login route
 @app.route('/login')
 def login():
     return render_template('login.html')
 
+#User Login route
+@app.route('/userlogin')
+def login():
+    return render_template('userlogin.html')
 
+#--------------------------------------------------------------
+security_codes = ["1234", "abcd"]
+
+@app.route('/adminsignup', methods=['GET', 'POST'])
+def adminsignup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        security_code = request.form['security_code']
+
+        if security_code in security_codes:
+            # Add code for admin account creation.
+            return render_template('adminlogin.html')
+        else:
+            return render_template('adminsignup.html')
+
+    return render_template('adminsignup.html')
+
+@app.route('/adminlogin', methods=['GET', 'POST'])
+def adminlogin():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if is_valid_admin(username, password):
+            # Redirect to the admin panel or handle it as needed.
+            return render_template('dashboard.html')
+        else:
+            return render_template('adminlogin.html')
+
+    return render_template('admin_login.html')
 
 
 

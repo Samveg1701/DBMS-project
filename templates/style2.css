@@ -1,0 +1,26 @@
+*{
+    margin:0;
+    padding: 0;
+}
+
+body {
+    background-color: #01171b;
+}
+.cards{
+    margin-top: 2%;
+}
+.map{
+    margin-top: 7%;
+}
+.map path {
+    fill: #00394f;
+    stroke: #eee;
+    stroke-width: 0.7;
+    transition: fill: 0.1s;
+}
+path:hover {
+    fill: rgb(243, 243, 166);
+}
+.topbar {
+    margin-top: 2%;
+}

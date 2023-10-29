@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body style="background: rgb(243, 243, 166);">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="./map.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="./dashboard2.html">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="./add_entries.html">Admin</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <h3 id="current-date"></h3>  
+            </form>
+          </div>
+        </div>
+    </nav>
+    <h1 style="padding-inline: 30%; margin-top: 2%;">Update Database</h1>
+    <div class="update" style="padding-inline: 30%;">
+        <form method="post" >
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+                </div>
+                <div class="col-sm-6">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" required>
+                </div>
+            </div>
+            <hr>
+            <label for="Continent" class="form-label">Continent</label>
+            <select class="form-select" aria-label="Default select example" id="Continent">
+                <option selected>Select</option>
+                <option value="1">Asia</option>
+                <option value="2">Africa</option>
+                <option value="3">Europe</option>
+                <option value="4">North America</option>
+                <option value="5">South America</option>
+                <option value="6">Oceania</option>
+            </select>
+
+            <label for="date" class="form-label">Date</label>
+            <input class="form-control" type="date" aria-label="default input example" id="date">
+
+            <label for="date" class="form-label">Country</label>
+            <input class="form-control" type="text" id="country" name="country">
+
+            <label for="date" class="form-label">Region</label>
+            <input type="text" class="form-control" id="region" name="region">
+ 
+            <label for="confirmed" class="form-label">Confirmed Cases</label>
+            <input type="number" class="form-control" id="confirmed" name="confirmed">
+
+            <label for="death" class="form-label">Deaths</label>
+            <input type="number" class="form-control" id="death" name="death">
+
+            <label for="recovered" class="form-label">Recovered</label>
+            <input type="number" class="form-control" id="recovered" name="recovered">
+
+            <label for="active" class="form-label">Active Cases</label>
+            <input type="number" class="form-control" id="active" name="active">
+    
+            <label for="total_tests" class="form-label">Total Cases</label>
+            <input type="number" class="form-control" id="total_tests" name="total_tests">
+    
+            <label for="population" class="form-label">Population</label>
+            <input type="number" class="form-control" id="population" name="population">
+    
+            <label for="tests_per_million" class="form-label">Tests Per Million</label>
+            <input type="number" class="form-control" id="tests_per_million" name="tests_per_million">
+    
+            <label for="tests_per_person" class="form-label">Tests Per Person</label>
+            <input type="number" class="form-control" id="tests_per_person" name="tests_per_person">
+    
+            <button type="submit" class="btn btn-primary" style="margin-top: 2%;">Submit</button>
+        </form>
+    </div>
+    <script>
+        // JavaScript to display the current date
+        var currentDate = new Date();
+        var dateElement = document.getElementById("current-date");
+        dateElement.textContent = currentDate.toDateString();
+    </script>
+</body>
+</html>
