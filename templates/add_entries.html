@@ -29,11 +29,11 @@
     </nav>
     <h1 style="padding-inline: 30%; margin-top: 2%;">Update Database</h1>
     <div class="update" style="padding-inline: 30%;">
-        <form method="post" >
+        <form id="data-form" method="post" >
             <div class="row">
                 <div class="col-sm-6">
-                    <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" aria-describedby="emailHelp" required>
                 </div>
                 <div class="col-sm-6">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -41,15 +41,15 @@
                 </div>
             </div>
             <hr>
-            <label for="Continent" class="form-label">Continent</label>
-            <select class="form-select" aria-label="Default select example" id="Continent">
+            <label for="table_name" class="form-label">Table Name</label>
+            <select class="form-select" aria-label="Default select example" id="table_name">
                 <option selected>Select</option>
-                <option value="1">Asia</option>
-                <option value="2">Africa</option>
-                <option value="3">Europe</option>
-                <option value="4">North America</option>
-                <option value="5">South America</option>
-                <option value="6">Oceania</option>
+                <option value="1">covid19_asia</option>
+                <option value="2">covid19_africa</option>
+                <option value="3">covid19_europe</option>
+                <option value="4">covid19_northamerica</option>
+                <option value="5">covid19_southamerica</option>
+                <option value="6">covid19_oceania</option>
             </select>
 
             <label for="date" class="form-label">Date</label>
@@ -64,8 +64,8 @@
             <label for="confirmed" class="form-label">Confirmed Cases</label>
             <input type="number" class="form-control" id="confirmed" name="confirmed">
 
-            <label for="death" class="form-label">Deaths</label>
-            <input type="number" class="form-control" id="death" name="death">
+            <label for="deaths" class="form-label">Deaths</label>
+            <input type="number" class="form-control" id="deaths" name="deaths">
 
             <label for="recovered" class="form-label">Recovered</label>
             <input type="number" class="form-control" id="recovered" name="recovered">
@@ -74,7 +74,7 @@
             <input type="number" class="form-control" id="active" name="active">
     
             <label for="total_tests" class="form-label">Total Cases</label>
-            <input type="number" class="form-control" id="total_tests" name="total_tests">
+            <input type="number" class="form-control" id="total_tests" name="total_test">
     
             <label for="population" class="form-label">Population</label>
             <input type="number" class="form-control" id="population" name="population">
@@ -83,11 +83,33 @@
             <input type="number" class="form-control" id="tests_per_million" name="tests_per_million">
     
             <label for="tests_per_person" class="form-label">Tests Per Person</label>
-            <input type="number" class="form-control" id="tests_per_person" name="tests_per_person">
+            <input type="number" class="form-control" id="tests_per_person" name="test_per_person">
     
             <button type="submit" class="btn btn-primary" style="margin-top: 2%;">Submit</button>
         </form>
     </div>
+     <pre id="result"></pre>
+    <script>
+      const form = document.getElementById('data-form');
+      const resultElement = document.getElementById('result');
+
+      form.addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent the form from submitting traditionally.
+
+          const formData = new FormData(form);
+          const data = {};
+
+          formData.forEach((value, key) => {
+              data[key] = value;
+          });
+
+          // Convert the JavaScript object to JSON.
+          const jsonData = JSON.stringify(data, null, 2);
+
+          // Display the JSON data in the "result" element.
+          resultElement.textContent = jsonData;
+      });
+    </script>
     <script>
         // JavaScript to display the current date
         var currentDate = new Date();

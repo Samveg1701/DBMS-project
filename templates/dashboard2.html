@@ -38,7 +38,7 @@
                     <input type="text" placeholder="Continent" required>
                     <ion-icon name="search-outline"></ion-icon>
                 </label>
-                -->
+                --><!--Values to form x axis in the graphs-->
                 <label for="start_date" class="form-label" style="padding-right: 1%;">Start</label>
                 <input class="form-control me-2" type="date" id="start_date" name="start_date" required>
                 <label for="end_date" class="form-label" style="padding-left: 2%; padding-right: 1%;">End</label>
@@ -54,7 +54,7 @@
         <div class="col-sm-4 mb-3 mb-sm-0">
           <div class="card" style="background: #00394f; color: #eee;">
             <div class="card-body">
-              <h5 class="card-title">Population</h5>
+              <h5 class="card-title">Confirmed Cases</h5>
               <p class="card-text">123,000,000</p>
             </div>
           </div>
@@ -62,7 +62,7 @@
         <div class="col-sm-4">
           <div class="card" style="background: #00394f; color: #eee;">
             <div class="card-body">
-              <h5 class="card-title">Confirmed Cases</h5>
+              <h5 class="card-title">Recovered</h5>
               <p class="card-text">20,500</p>
             </div>
           </div>
@@ -1045,7 +1045,7 @@
   <div class="graphs" style="margin-top: 2%; margin-left: 2%; margin-right: 2%;">
     <div class="row">
         <div class="col-sm-4 mb-3 mb-sm-0">
-            <label for="South_america">North America</label>
+            <label for="North_america">North America</label>
             <canvas id="North_america" style="width:100%;max-width:600px"></canvas>
             <script>
             const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
@@ -1228,6 +1228,40 @@
                 });
             </script>
         </div>
+    </div>
+    <!--row 3 of line graphs-->
+    <div class="row">
+      <div class="col-sm-4 mb-3 mb-sm-0" style="margin-inline: auto;">
+        <label for="World">World</label>
+        <canvas id="World" style="width:100%;max-width:600px"></canvas>
+        <script>
+        const x7Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
+        new Chart("World", {
+        type: "line",
+        data: {
+            labels: xValues,
+            datasets: [{ 
+            data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+            borderColor: "red",
+            fill: false
+            }, { 
+            data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+            borderColor: "green",
+            fill: false
+            }, { 
+            data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+            borderColor: "blue",
+            fill: false
+            }]
+        },
+        options: {
+            legend: {display: false}
+        }
+        });
+        </script>
+      </div>
+    </div>
     </div>
   </div>
 
