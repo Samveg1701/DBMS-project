@@ -1986,6 +1986,11 @@
         svgPaths.forEach(function(path) {
             path.addEventListener('mouseover', function(event) {
                 var countryName = event.target.getAttribute('name');
+
+                if(!countryName) {
+                    countryName = event.target.getAttribute('class');
+                }
+                
                 countryNameDiv.textContent = countryName;
             });
 
