@@ -37,6 +37,7 @@ covid19southamerica = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS
 covid19tests = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/Old dataset/covid19_tests.json'
 covid19world = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/New dataset/covid19_world.json'
 worldpopulation = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/New dataset/World_population(2020).json'
+
 # C:\Users\asus\OneDrive\Desktop\University\Semester 7\DBMS\New dataset\World_population(2020).json
 
 # # Connect to the PostgreSQL database
@@ -347,14 +348,14 @@ worldpopulation = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/New
 # create_trigger()
 # conn.commit()
 
-# update_dict = {
-    # 'Asia': "covid19_asia", 
-    # 'Africa': "covid19africa",
-    # 'Europe': "covid19_europe", 
-    # 'North America': "covid19_northamerica",
-    # 'South America': 'covid19_southamerica', 
-    # 'Oceania': 'covid19_oceania'
-# }
+update_dict = {
+    'Asia': "covid19_asia", 
+    'Africa': "covid19africa",
+    'Europe': "covid19_europe", 
+    'North America': "covid19_northamerica",
+    'South America': 'covid19_southamerica', 
+    'Oceania': 'covid19_oceania'
+}
 
 # Queries
 def correct_authentication(username, password):
@@ -368,51 +369,66 @@ def correct_authentication(username, password):
     else:
          return False 
 
-# username = ''
-# password = ''
-# print()
 
 def select_total_continents(tablename):
     cur.execute(f"SELECT observation_date, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} GROUP BY observation_date")
     rows = cur.fetchall()
     if not rows:
-            print("No rows found.")
+            empty_list = []
+            return empty_list
     else:
         return rows
 
 def country(tablename, country_name, specified_date):
     # cur.execute(f"SELECT observation_date, country, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE country = %s GROUP BY observation_date, country", (country_name,))
-    cur.execute(f"SELECT observation_date, country, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE country = %s AND observation_date = %s GROUP BY observation_date, country", (country_name, specified_date))
+    cur.execute(f"SELECT observation_date, country, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM covid19_world WHERE country = %s AND observation_date = %s GROUP BY observation_date, country", (country_name, specified_date))
+    # cur.execute(f"SELECT observation_date, country, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE observation_date BETWEEN %s AND %s GROUP BY observation_date, country", (country_name, specified_date1, specifieddate2))
+    # cur.execute(f'''
+    # SELECT observation_date, country, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) 
+    # FROM {tablename} 
+    # WHERE country = %s AND observation_date BETWEEN %s AND %s 
+    # GROUP BY observation_date, country
+    # ''', (country_name, specified_date1, specified_date2))
 
+    
     rows = cur.fetchall()
     df = pd.DataFrame(rows, columns=['Observation Date', 'Country', 'Total Confirmed', 'Total Deaths', 'Total Recovered', 'Total Active'])
     print(df)
     if not rows:
-            print("No rows found.")
+            empty_list = []
+            return empty_list
+        
     else:
         # for row in rows:
         #     print(row)
+        print(rows)
         return rows
 
+result = country("covid19_europe",'Finland', '2020-06-15')
+print(result[0])
 def select_data_between_dates(tablename, date1, date2):
     # cur.execute(f"SELECT observation_date, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE observation_date BETWEEN " + date1 + " AND " + date2 + " GROUP BY observation_date")
     cur.execute(f"SELECT observation_date, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE observation_date BETWEEN %s AND %s GROUP BY observation_date", (date1, date2))
 
     rows = cur.fetchall()
     if not rows:
+            empty_list = []
+            return empty_list
             print("No rows found.")
     else:
         # for row in rows:
         #     print(row)
         return rows     
 
-# dates = select_data_between_dates("covid19africa", "2020-01-27", "2020-02-15")
-# print(dates)
+dates = select_data_between_dates("covid19_africa", "2020-01-27", "2020-02-15")
+print(dates)
 
 def select_total_countries():
     cur.execute(f"SELECT DISTINCT country FROM covid19_world")
     rows = cur.fetchall()
     if not rows:
+            empty_list = []
+            return empty_list            
             print("No rows found.")
     else:
         # for row in rows:
@@ -427,18 +443,25 @@ def select_world_population():
     cur.execute(f"SELECT * FROM world_population")
     rows = cur.fetchall()
     if not rows:
+            empty_list = []
+            return empty_list            
             print("No rows found.")
     else:
         # for row in rows:
         #     print(row)
         return rows
     
-def select_tests(tablename):
+def select_tests(country_or_other, specified_date):
     # cur.execute(f"SELECT * FROM covid19_tests")
-    cur.execute(f"SELECT date, SUM(total_tests) FROM covid19_tests GROUP BY date")
+    # cur.execute(f"SELECT date, SUM(total_tests) FROM covid19_tests GROUP BY date")
+    # cur.execute(f"SELECT date, SUM(total_tests) FROM covid19_tests WHERE date = %s GROUP BY date", (specified_date,))
+    cur.execute(f"SELECT date, country_or_other, SUM(total_tests) FROM covid19_tests WHERE date = %s AND country_or_other = %s GROUP BY date, country_or_other", (specified_date, country_or_other))
+
 
     rows = cur.fetchall()
     if not rows:
+            empty_list = []
+            return empty_list            
             print("No rows found.")
     else:
         # for row in rows:
@@ -467,6 +490,8 @@ GROUP BY observation_date;
 """)
     rows = cur.fetchall()
     if not rows:
+            empty_list = []
+            return empty_list            
             print("No rows found.")
     else:
         # for row in rows:
@@ -535,11 +560,13 @@ def update(table_name, date, country, region, confirmed, deaths, recovered, acti
 
 update("covid19_asia", "2020-09-14", "India", "Mumbai", 300, 20, 50, 50, 2000, 200000, 2, 20)
 # cur.execute("Select * from covid19_world where region=Mumbai ")
-cur.execute("SELECT * FROM covid19_world WHERE region = 'Mumbai'")
+# cur.execute("SELECT * FROM covid19_world WHERE region = 'Mumbai'")
 
-result = cur.fetchall()
-print(result)
+# result = cur.fetchall()
+# print(result)
 
+result = select_tests('Finland', '2020-06-15')
+print(result[0])
 conn.commit()
 conn.close()
 
