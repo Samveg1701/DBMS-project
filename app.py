@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import Create_database
 
 
@@ -80,17 +80,17 @@ def adminsignup():
 
     return render_template('adminsignup.html')
 
-@app.route('/adminlogin', methods=['GET', 'POST'])
+@app.route('/add_entries', methods=['GET', 'POST'])
 def adminlogin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        if is_valid_admin(username, password):
+        if Create_database.correct_authentication(username, password):
             # Redirect to the admin panel or handle it as needed.
-            return render_template('dashboard.html')
+            return render_template('dashboard2.html')
         else:
-            return render_template('adminlogin.html')
+            return render_template('add_entries.html')
 
     return render_template('admin_login.html')
 

@@ -19,8 +19,9 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 # conn.commit()
 # conn.close()
 conn = psycopg2.connect(
-    dbname="postgres", user="postgres", password="asus", host="localhost")
+    dbname="sequel", user="sequel", password="7b80eefa", host="10.2.95.122")
 cur = conn.cursor()
+# print(cur)
 # sqlCreateDatabase = "CREATE DATABASE IF NOT EXISTS "+name_Database+";"
 # Create a table in PostgreSQL database
 # cur.execute("DROP IF Covid19_Visualization EXISTS")
@@ -44,269 +45,270 @@ worldpopulation = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/New
 # cur.execute("CREATE DATABASE Covid19_Visualization")
 
 # Read the JSON data from the file
-with open(covid19africa, 'r') as file:
-    covid19_africa = json.load(file)
+# with open(covid19africa, 'r') as file:
+#     covid19_africa = json.load(file)
 
-# print(covid19_africa)
-# test day wise
-with open(covid19asia, 'r') as file:
-    covid19_asia = json.load(file)
+# # print(covid19_africa)
+# # test day wise
+# with open(covid19asia, 'r') as file:
+#     covid19_asia = json.load(file)
 
-with open(covid19europe, 'r') as file:
-    covid19_europe = json.load(file)
+# with open(covid19europe, 'r') as file:
+#     covid19_europe = json.load(file)
 
-with open(covid19northamerica, 'r') as file:
-    covid19_northamerica = json.load(file)
+# with open(covid19northamerica, 'r') as file:
+#     covid19_northamerica = json.load(file)
 
-with open(covid19oceania, 'r') as file:
-    covid19_oceania = json.load(file)
+# with open(covid19oceania, 'r') as file:
+#     covid19_oceania = json.load(file)
 
-with open(covid19southamerica, 'r') as file:
-    covid19_southamerica = json.load(file)
+# with open(covid19southamerica, 'r') as file:
+#     covid19_southamerica = json.load(file)
 
-with open(covid19tests, 'r') as file:
-    covid19_tests = json.load(file)
+# with open(covid19tests, 'r') as file:
+#     covid19_tests = json.load(file)
 
-with open(covid19world, 'r') as file:
-    covid19_world = json.load(file)
+# with open(covid19world, 'r') as file:
+#     covid19_world = json.load(file)
 
-with open(worldpopulation, 'r') as file:
-    world_population = json.load(file)
+# with open(worldpopulation, 'r') as file:
+    # world_population = json.load(file)
 # print(world_population)
 
 
 
-def authentication():
-    cur.execute(f"DROP TABLE IF EXISTS authentication_db")
-    cur.execute('''CREATE TABLE authentication_db (
-                    username VARCHAR(50), 
-                    password VARCHAR(30)
-    )''')
-    cur.execute('''INSERT INTO authentication_db VALUES (
-                    'admin', 'admin_password'
-                  )''')
-    cur.execute("select * from authentication_db")
-    authentication_data = cur.fetchall()
-    print(authentication_data)
+# def authentication():
+#     cur.execute(f"DROP TABLE IF EXISTS authentication_db")
+#     cur.execute('''CREATE TABLE authentication_db (
+#                     username VARCHAR(50), 
+#                     password VARCHAR(30)
+#     )''')
+#     cur.execute('''INSERT INTO authentication_db VALUES (
+#                     'admin', 'admin_password'
+#                   )''')
+#     cur.execute("select * from authentication_db")
+#     authentication_data = cur.fetchall()
+#     print(authentication_data)
 
-def create_views(table1, table2):
+# def create_views(table1, table2):
     
-    cur.execute(f'''
-    DROP VIEW IF EXISTS joined_view;
-    CREATE VIEW joined_view AS 
-    SELECT 
-        {table1}.country, 
-        {table1}.population, 
-        {table1}.yearly_change, 
-        {table1}.net_change, 
-        {table1}.density, 
-        {table1}.land_area, 
-        {table1}.migrants_net, 
-        {table1}.fert_rate, 
-        {table1}.med_age, 
-        {table1}.urban_pop_percent, 
-        {table1}.world_share, 
-        {table2}.date, 
-        {table2}.country_or_other, 
-        {table2}.total_tests, 
-        {table2}.tests_per_1m_pop, 
-        {table2}.test_every_x_ppl
-    FROM {table1}
-    INNER JOIN {table2} 
-    ON {table1}.country = {table2}.country_or_other
-    ''')
-    cur.execute("SELECT COUNT(DISTINCT country) FROM joined_view")
-    results = cur.fetchall()
-    print(results)
+#     cur.execute(f'''
+#     DROP VIEW IF EXISTS joined_view;
+#     CREATE VIEW joined_view AS 
+#     SELECT 
+#         {table1}.country, 
+#         {table1}.population, 
+#         {table1}.yearly_change, 
+#         {table1}.net_change, 
+#         {table1}.density, 
+#         {table1}.land_area, 
+#         {table1}.migrants_net, 
+#         {table1}.fert_rate, 
+#         {table1}.med_age, 
+#         {table1}.urban_pop_percent, 
+#         {table1}.world_share, 
+#         {table2}.date, 
+#         {table2}.country_or_other, 
+#         {table2}.total_tests, 
+#         {table2}.tests_per_1m_pop, 
+#         {table2}.test_every_x_ppl
+#     FROM {table1}
+#     INNER JOIN {table2} 
+#     ON {table1}.country = {table2}.country_or_other
+#     ''')
+#     cur.execute("SELECT COUNT(DISTINCT country) FROM joined_view")
+#     results = cur.fetchall()
+#     print(results)
 
-# print(covid19_tests)
-def insert_json_data_to_postgres(json_data, table_name, cur):
-    # Drop the table if it already exists
-    cur.execute(f"DROP TABLE IF EXISTS {table_name}")
+# # print(covid19_tests)
+# def insert_json_data_to_postgres(json_data, table_name, cur):
+#     # Drop the table if it already exists
+#     cur.execute(f"DROP TABLE IF EXISTS {table_name}")
 
-    # Create a new table
-    cur.execute(f'''
-    CREATE TABLE {table_name} (
-        observation_date DATE,
-        country VARCHAR(255),
-        region VARCHAR(255),
-        confirmed FLOAT,
-        deaths FLOAT,
-        recovered FLOAT,
-        active FLOAT,
-        PRIMARY KEY (observation_date, country, region)   
-    )
-    ''')
+#     # Create a new table
+#     cur.execute(f'''
+#     CREATE TABLE {table_name} (
+#         observation_date DATE,
+#         country VARCHAR(255),
+        # region VARCHAR(255),
+        # endregion
+#         confirmed FLOAT,
+#         deaths FLOAT,
+#         recovered FLOAT,
+#         active FLOAT,
+#         PRIMARY KEY (observation_date, country, region)   
+#     )
+#     ''')
 
 
-    # Insert data into the table
-    for data in json_data:
+#     # Insert data into the table
+#     for data in json_data:
 
-        if 'Confirmed' in data and (data['Confirmed'] == 'NA' or data['Confirmed'] == ''):
-            data['Confirmed'] = 0
-        if 'Deaths' in data and (data['Deaths'] == 'NA' or data['Deaths'] == ''):
-            data['Deaths'] = 0
-        if 'Recovered' in data and (data['Recovered'] == 'NA' or data['Recovered'] == ''):
-            data['Recovered'] = 0
-        if 'Active' in data and (data['Active'] == 'NA' or data['Active'] == ''):
-            data['Active'] = 0
+#         if 'Confirmed' in data and (data['Confirmed'] == 'NA' or data['Confirmed'] == ''):
+#             data['Confirmed'] = 0
+#         if 'Deaths' in data and (data['Deaths'] == 'NA' or data['Deaths'] == ''):
+#             data['Deaths'] = 0
+#         if 'Recovered' in data and (data['Recovered'] == 'NA' or data['Recovered'] == ''):
+#             data['Recovered'] = 0
+#         if 'Active' in data and (data['Active'] == 'NA' or data['Active'] == ''):
+#             data['Active'] = 0
 
-        if isinstance(data, dict) and all(key in data for key in ['ObservationDate', 'Country_Region', 'Province_State', 'Confirmed', 'Deaths', 'Recovered', 'Active']):
-            observation_date = datetime.strptime(data["ObservationDate"], '%Y-%m-%d').date()
-            cur.execute(f"""
-                INSERT INTO {table_name} (
-                    observation_date, country, region, confirmed, deaths, recovered, active
-                ) VALUES (
-                    %s, %s, %s, %s, %s, %s, %s
-                )
-                ON CONFLICT (observation_date, country, region) DO NOTHING
-                """, (
-                    observation_date,
-                    data["Country_Region"],
-                    data["Province_State"],
-                    data["Confirmed"],
-                    data["Deaths"],
-                    data["Recovered"],
-                    float(data["Active"])
-                )
-            )
-        # break
+#         if isinstance(data, dict) and all(key in data for key in ['ObservationDate', 'Country_Region', 'Province_State', 'Confirmed', 'Deaths', 'Recovered', 'Active']):
+#             observation_date = datetime.strptime(data["ObservationDate"], '%Y-%m-%d').date()
+#             cur.execute(f"""
+#                 INSERT INTO {table_name} (
+#                     observation_date, country, region, confirmed, deaths, recovered, active
+#                 ) VALUES (
+#                     %s, %s, %s, %s, %s, %s, %s
+#                 )
+#                 ON CONFLICT (observation_date, country, region) DO NOTHING
+#                 """, (
+#                     observation_date,
+#                     data["Country_Region"],
+#                     data["Province_State"],
+#                     data["Confirmed"],
+#                     data["Deaths"],
+#                     data["Recovered"],
+#                     float(data["Active"])
+#                 )
+#             )
+#         # break
 
-# world population
-def create_table_from_json(json_data, table_name, cur):
-    cur.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
-    # Ensure the structure of the JSON data and the keys match the expected format
-    # if isinstance(data, dict):
-    cur.execute(f'''
-        CREATE TABLE {table_name} (
-            country VARCHAR(255) UNIQUE,
-            population INTEGER,
-            yearly_change VARCHAR(255),
-            net_change INTEGER,
-            density INTEGER,
-            land_area INTEGER,
-            migrants_net INTEGER,
-            fert_rate VARCHAR(255),
-            med_age VARCHAR(255),
-            urban_pop_percent VARCHAR(255),
-            world_share VARCHAR(255),
-            PRIMARY KEY (country)
-        ) '''
-    )
+# # world population
+# def create_table_from_json(json_data, table_name, cur):
+#     cur.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
+#     # Ensure the structure of the JSON data and the keys match the expected format
+#     # if isinstance(data, dict):
+#     cur.execute(f'''
+#         CREATE TABLE {table_name} (
+#             country VARCHAR(255) UNIQUE,
+#             population INTEGER,
+#             yearly_change VARCHAR(255),
+#             net_change INTEGER,
+#             density INTEGER,
+#             land_area INTEGER,
+#             migrants_net INTEGER,
+#             fert_rate VARCHAR(255),
+#             med_age VARCHAR(255),
+#             urban_pop_percent VARCHAR(255),
+#             world_share VARCHAR(255),
+#             PRIMARY KEY (country)
+#         ) '''
+#     )
 
-    for data in json_data:
-        cur.execute(f"""
-            INSERT INTO {table_name} (
-                country, population, yearly_change, net_change, density,
-                land_area, migrants_net, fert_rate, med_age, urban_pop_percent, world_share
-            ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-            )""", (
-                data['Country (or dependency)'],
-                data['Population (2020)'] if data['Population (2020)'] else None,
-                data['Yearly Change'],
-                data['Net Change'] if data['Net Change'] else None ,
-                data['Density'] if 'Density' in data else None,
-                data['Land Area'] if data['Land Area'] else None ,
-                data['Migrants (net)'] if  data['Migrants (net)'] else None ,
-                data['Fert. Rate'] if data['Fert. Rate'] else None ,
-                data['Med. Age'] if data['Med. Age'] else None ,
-                data['Urban Pop %'] if data['Urban Pop %'] else None ,
-                data['World Share'] if data['World Share'] else None 
-            )
+#     for data in json_data:
+#         cur.execute(f"""
+#             INSERT INTO {table_name} (
+#                 country, population, yearly_change, net_change, density,
+#                 land_area, migrants_net, fert_rate, med_age, urban_pop_percent, world_share
+#             ) VALUES (
+#                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+#             )""", (
+#                 data['Country (or dependency)'],
+#                 data['Population (2020)'] if data['Population (2020)'] else None,
+#                 data['Yearly Change'],
+#                 data['Net Change'] if data['Net Change'] else None ,
+#                 data['Density'] if 'Density' in data else None,
+#                 data['Land Area'] if data['Land Area'] else None ,
+#                 data['Migrants (net)'] if  data['Migrants (net)'] else None ,
+#                 data['Fert. Rate'] if data['Fert. Rate'] else None ,
+#                 data['Med. Age'] if data['Med. Age'] else None ,
+#                 data['Urban Pop %'] if data['Urban Pop %'] else None ,
+#                 data['World Share'] if data['World Share'] else None 
+#             )
         
-        )
-        # break
+#         )
+#         # break
 
-def create_index_continents(table_name):
-    drop_index_sql = f"DROP INDEX IF EXISTS {table_name}_index;"
-    create_index_sql = f"""
-    CREATE INDEX {table_name}_index
-    ON {table_name}(observation_date, country)
-    """ 
-    cur.execute(drop_index_sql)
-    cur.execute(create_index_sql)
-    # pass
+# def create_index_continents(table_name):
+#     drop_index_sql = f"DROP INDEX IF EXISTS {table_name}_index;"
+#     create_index_sql = f"""
+#     CREATE INDEX {table_name}_index
+#     ON {table_name}(observation_date, country)
+#     """ 
+#     cur.execute(drop_index_sql)
+#     cur.execute(create_index_sql)
+#     # pass
 
-def create_test_table_from_json(json_data, table_name, cur):
-    # print('hey')
-    cur.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE")
-    print("here")
-    cur.execute(f'''
-        CREATE TABLE {table_name} (
-            date DATE,
-            country_or_other VARCHAR(255),
-            total_tests FLOAT,
-            population VARCHAR(255),
-            tests_per_1m_pop VARCHAR(255),
-            test_every_x_ppl VARCHAR(255), 
-            PRIMARY KEY (date, country_or_other)
-        )
-    ''')
+# def create_test_table_from_json(json_data, table_name, cur):
+#     # print('hey')
+#     cur.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE")
+#     print("here")
+#     cur.execute(f'''
+#         CREATE TABLE {table_name} (
+#             date DATE,
+#             country_or_other VARCHAR(255),
+#             total_tests FLOAT,
+#             population VARCHAR(255),
+#             tests_per_1m_pop VARCHAR(255),
+#             test_every_x_ppl VARCHAR(255), 
+#             PRIMARY KEY (date, country_or_other)
+#         )
+#     ''')
 
-    for data in json_data:
-        if 'TotalTests' in data and data['TotalTests'] == 'NA':
-            data['TotalTests'] = 0
-        if 'Tests/1M pop' in data and data['Tests/1M pop'] == 'NA':
-            data['Tests/1M pop'] = None
-        if '1 Testevery X ppl' in data and data['1 Testevery X ppl'] == 'NA':
-            data['1 Testevery X ppl'] = None
+#     for data in json_data:
+#         if 'TotalTests' in data and data['TotalTests'] == 'NA':
+#             data['TotalTests'] = 0
+#         if 'Tests/1M pop' in data and data['Tests/1M pop'] == 'NA':
+#             data['Tests/1M pop'] = None
+#         if '1 Testevery X ppl' in data and data['1 Testevery X ppl'] == 'NA':
+#             data['1 Testevery X ppl'] = None
 
-        if all(key in data for key in ['Date', 'Country,Other', 'TotalTests', 'Population', 'Tests/1M pop', '1 Testevery X ppl']):
-            observation_date = datetime.strptime(data["Date"], '%Y-%m-%d').date()
-            cur.execute(f"""
-                INSERT INTO {table_name} (
-                    date, country_or_other, total_tests, population, tests_per_1m_pop, test_every_x_ppl
-                ) VALUES (
-                    %s, %s, %s, %s, %s, %s
-                ) 
-                ON CONFLICT (date, country_or_other) DO NOTHING
-                """, (
-                    observation_date,
-                    data['Country,Other'],
-                    float(data['TotalTests']),
-                    data['Population'],
-                    data['Tests/1M pop'],
-                    data['1 Testevery X ppl']
-                )
-            )
-        # break
+#         if all(key in data for key in ['Date', 'Country,Other', 'TotalTests', 'Population', 'Tests/1M pop', '1 Testevery X ppl']):
+#             observation_date = datetime.strptime(data["Date"], '%Y-%m-%d').date()
+#             cur.execute(f"""
+#                 INSERT INTO {table_name} (
+#                     date, country_or_other, total_tests, population, tests_per_1m_pop, test_every_x_ppl
+#                 ) VALUES (
+#                     %s, %s, %s, %s, %s, %s
+#                 ) 
+#                 ON CONFLICT (date, country_or_other) DO NOTHING
+#                 """, (
+#                     observation_date,
+#                     data['Country,Other'],
+#                     float(data['TotalTests']),
+#                     data['Population'],
+#                     data['Tests/1M pop'],
+#                     data['1 Testevery X ppl']
+#                 )
+#             )
+#         # break
 
-    # cur.execute(f"""
-    # ALTER TABLE {table_name}
-    # ADD CONSTRAINT pk_date_country PRIMARY KEY (date, country_or_other);
-    # """)  
-    # cur.execute(f"SELECT * FROM {table_name}")
-    # records = cur.fetchall()
-    # for record in records:
-    #     print(record)
+#     # cur.execute(f"""
+#     # ALTER TABLE {table_name}
+#     # ADD CONSTRAINT pk_date_country PRIMARY KEY (date, country_or_other);
+#     # """)  
+#     # cur.execute(f"SELECT * FROM {table_name}")
+#     # records = cur.fetchall()
+#     # for record in records:
+#     #     print(record)
 
-def create_trigger():
-    trigger_creation_query = '''
-        CREATE OR REPLACE FUNCTION check_authenticated_user()
-        RETURNS TRIGGER AS $$
-        BEGIN
-            IF EXISTS (SELECT 1 FROM authentication_db WHERE username = NEW.username) THEN
-                RETURN NEW;
-            ELSE
-                RAISE EXCEPTION 'User not found in authentication_db';
-            END IF;
-        END;
-        $$ LANGUAGE plpgsql;
+# def create_trigger():
+    # trigger_creation_query = '''
+    #     CREATE OR REPLACE FUNCTION check_authenticated_user()
+    #     RETURNS TRIGGER AS $$
+    #     BEGIN
+    #         IF EXISTS (SELECT 1 FROM authentication_db WHERE username = NEW.username) THEN
+    #             RETURN NEW;
+    #         ELSE
+    #             RAISE EXCEPTION 'User not found in authentication_db';
+    #         END IF;
+    #     END;
+    #     $$ LANGUAGE plpgsql;
 
-        CREATE TRIGGER check_user_trigger
-        BEFORE UPDATE ON covid19_world
-        FOR EACH ROW
-        EXECUTE FUNCTION check_authenticated_user();
-        '''
-    cur.execute(trigger_creation_query)
+    #     CREATE TRIGGER check_user_trigger
+    #     BEFORE UPDATE ON covid19_world
+    #     FOR EACH ROW
+    #     EXECUTE FUNCTION check_authenticated_user();
+    #     '''
+    # cur.execute(trigger_creation_query)
 
 # Example usage
-json_data = covid19_tests
+# json_data = covid19_tests
 
 
 # Function Calls
-authentication()
+# authentication()
 # create_test_table_from_json(json_data, 'covid19_tests', cur)
 # print("2")
 # create_table_from_json(world_population, 'world_population', cur)
@@ -345,24 +347,37 @@ authentication()
 # create_trigger()
 # conn.commit()
 
-update_dict = {
-    'Asia': "covid19_asia", 
-    'Africa': "covid19africa",
-    'Europe': "covid19_europe", 
-    'North America': "covid19_northamerica",
-    'South America': 'covid19_southamerica', 
-    'Oceania': 'covid19_oceania'
-}
+# update_dict = {
+    # 'Asia': "covid19_asia", 
+    # 'Africa': "covid19africa",
+    # 'Europe': "covid19_europe", 
+    # 'North America': "covid19_northamerica",
+    # 'South America': 'covid19_southamerica', 
+    # 'Oceania': 'covid19_oceania'
+# }
 
 # Queries
+def correct_authentication(username, password):
+    # cur.execute("select * from authentication_db")
+    cur.execute("SELECT * FROM authentication_db WHERE username = %s AND password = %s", (username, password))
+    result = cur.fetchall()
+    
+    # print(result[0][0])
+    if result:
+         return True
+    else:
+         return False 
+
+# username = ''
+# password = ''
+# print()
+
 def select_total_continents(tablename):
     cur.execute(f"SELECT observation_date, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} GROUP BY observation_date")
     rows = cur.fetchall()
     if not rows:
             print("No rows found.")
     else:
-        # for row in rows:
-        #     print(row)
         return rows
 
 def country(tablename, country_name, specified_date):
