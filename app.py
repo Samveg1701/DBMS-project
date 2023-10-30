@@ -16,10 +16,11 @@ update_dict = {
     'Oceania': 'covid19_oceania', 
     'World' : 'covid19_world'
 }
-@app.route('/home')  # Gets called when home page is requested
+
+@app.route('/dashboard2',  methods=['POST', 'GET'] )  # Gets called when home page is requested
 def home():
-    date_from = request.form['date1']  # Get the given 'from date' from the form
-    date_to =   request.form['date2']  # Get the given 'to date' from the form
+    date_from = request.form['start_date']  # Get the given 'from date' from the form
+    date_to =   request.form['end_date']  # Get the given 'to date' from the form
     if date_from > date_to:  # If user gives a from date that's after to date
         # swap dates
         temp = date_from
@@ -38,15 +39,15 @@ def home():
         # country_names = Create_database.select_total_countries()
         result = Create_database.select_data_between_dates('covid19_world', date_from, date_to,)
         return render_template(
-            'home.html',
+            'dashboard2.html',
 
         )
 
-@app.route('/result', methods=['POST'])  # Called when form is submitted for map.html
+@app.route('/map', methods=['POST', 'GET'])  # Called when form is submitted for map.html
 def result():
-    date_from = request.form['date1']  # Get the given 'from date' from the form
+    date_from = request.get['start_date']  # Get the given 'from date' from the form
     # date_to =   request.form['date2']  # Get the given 'to date' from the form
-    country = request.form['Country']  # Country
+    country = request.form.get['Country']  # Country
     # table_names = request.form['Continent'] 
     # continent = update_dict[table_names]
     # if date_from > date_to:  # If user gives a from date that's after to date
@@ -64,36 +65,53 @@ def result():
 
     result2 = Create_database.country(country, date_from)  # Get total cases and deaths for 'country'
     result = Create_database.select_tests(country,date_from)
+
+    if result2:
+        date = result2[0][0]
+        country = result2[0][1]
+        confirmed = result2[0][2]
+        deaths = result2[0][3]
+        recovered = result2[0][4]
+        active = result2[0][5]
+    else:
+        date = None
+        country = None
+        confirmed = None
+        deaths = None
+        recovered = None
+        active = None
+
+    if result:
+        total_tests = result[0][2]
+    else:
+        total_tests = None
     return render_template(
-        'home.html',
+        'map.html',
         # rlt4=result,
         rlt2=result2,
         # cntr_nms=country_names,
         # gl_cs_dths=global_cases_deaths,
         # d_from=date_from,
         # d_to=date_to,
-        date = result2[0][0],
-        country = result2[0][1],
-        confirmed = result2[0][2],
-        deaths = result2[0][3],
-        recovered = result2[0][4],
-        active = result2[0][5],
-        total_tests = result[0][2],
+        date = date,
+        country = country,
+        confirmed = confirmed,
+        deaths = deaths,
+        recovered = recovered,
+        active = active,
+        total_tests = total_tests,
     )
 
-if __name__ == '__main__':
-    # This should be changed later  
-    app.run(host='0.0.0.0', debug=True)
     
 #Admin Login route
-@app.route('/login')
-def login():
-    return render_template('login.html')
+# @app.route('/login')
+# def login():
+#     return render_template('login.html')
 
 #User Login route
-@app.route('/userlogin')
-def login():
-    return render_template('userlogin.html')
+# @app.route('/userlogin')
+# def login():
+    # return render_template('userlogin.html')
 
 #--------------------------------------------------------------
 security_codes = ["1234", "abcd"]
@@ -115,34 +133,36 @@ def adminsignup():
 
 @app.route('/add_entries', methods=['GET', 'POST'])
 def adminlogin():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        table_names = request.form['Continent'] 
-        continent = update_dict[table_names]
-        country = request.form['Country']
-        reigion = request.form['Region']
-        confirmed =  request.form['Confirmed Case']
-        deaths = request.form['Deaths']
-        recovered = request.form['Recovered']
-        active = request.form['Active Cases']
-        total_test = request.form['Total Tests']
-        population = request.form['Population']
-        tests_per_million = request.form['Test per Million']
-        test_per_person = request.form['Tests per Person']
-        date = request.form['Date']
+    # if request.method == 'POST':
+    #     username = request.form['username']
+    #     password = request.form['password']
+    #     table_names = request.form['Continent'] 
+    #     continent = update_dict[table_names]
+    #     country = request.form['Country']
+    #     reigion = request.form['Region']
+    #     confirmed =  request.form['Confirmed Case']
+    #     deaths = request.form['Deaths']
+    #     recovered = request.form['Recovered']
+    #     active = request.form['Active Cases']
+    #     total_test = request.form['Total Tests']
+    #     population = request.form['Population']
+    #     tests_per_million = request.form['Test per Million']
+    #     test_per_person = request.form['Tests per Person']
+    #     date = request.form['Date']
 
-        if Create_database.correct_authentication(username, password):
-            # Redirect to the admin panel or handle it as needed.
-            # check the logic
-            Create_database.update(continent, date, country, reigion, confirmed, deaths, recovered, active, total_test, population, tests_per_million, test_per_person)
-            return render_template('dashboard2.html')
-        else:
-            return render_template('add_entries.html')
+    #     if Create_database.correct_authentication(username, password):
+    #         # Redirect to the admin panel or handle it as needed.
+    #         # check the logic
+    #         Create_database.update(continent, date, country, reigion, confirmed, deaths, recovered, active, total_test, population, tests_per_million, test_per_person)
+        #     return render_template('dashboard2.html')
+        # else:
+        #     return render_template('add_entries.html')
 
-    return render_template('admin_login.html')
+    return render_template('map.html')
 
 
-
+if __name__ == '__main__':
+    # This should be changed later  
+    app.run(host='0.0.0.0', debug=True)
 
 
