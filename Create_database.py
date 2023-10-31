@@ -404,8 +404,8 @@ def country(tablename, country_name, specified_date):
         print(rows)
         return rows
 
-result = country("covid19_europe",'Finland', '2020-06-15')
-print(result[0])
+# result = country("covid19_europe",'Finland', '2020-06-15')
+# print(result[0])
 def select_data_between_dates(tablename, date1, date2):
     # cur.execute(f"SELECT observation_date, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE observation_date BETWEEN " + date1 + " AND " + date2 + " GROUP BY observation_date")
     cur.execute(f"SELECT observation_date, SUM(confirmed), SUM(deaths), SUM(recovered), SUM(active) FROM {tablename} WHERE observation_date BETWEEN %s AND %s GROUP BY observation_date", (date1, date2))
@@ -420,8 +420,8 @@ def select_data_between_dates(tablename, date1, date2):
         #     print(row)
         return rows     
 
-dates = select_data_between_dates("covid19_africa", "2020-01-27", "2020-02-15")
-print(dates)
+# dates = select_data_between_dates("covid19_africa", "2020-01-27", "2020-02-15")
+# print(dates)
 
 def select_total_countries():
     cur.execute(f"SELECT DISTINCT country FROM covid19_world")
@@ -435,8 +435,8 @@ def select_total_countries():
         #     print(row)
         return rows
 
-tablename = "covid19_world"  # Assuming tablename is a string
-select_total_continents(tablename)
+# tablename = "covid19_world"  # Assuming tablename is a string
+# select_total_continents(tablename)
 
 
 def select_world_population():
@@ -565,8 +565,8 @@ update("covid19_asia", "2020-09-14", "India", "Mumbai", 300, 20, 50, 50, 2000, 2
 # result = cur.fetchall()
 # print(result)
 
-result = select_tests('Finland', '2020-06-15')
-print(result[0])
+# result = select_tests('Finland', '2020-06-15')
+# print(result[0])
 conn.commit()
-conn.close()
+# conn.close()
 

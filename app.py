@@ -17,7 +17,7 @@ update_dict = {
     'World' : 'covid19_world'
 }
 
-@app.route('/dashboard2',  methods=['POST', 'GET'] )  # Gets called when home page is requested
+@app.route('/dashboard2',  methods=['GET'] )  # Gets called when home page is requested
 def home():
     date_from = request.form['start_date']  # Get the given 'from date' from the form
     date_to =   request.form['end_date']  # Get the given 'to date' from the form
@@ -43,65 +43,126 @@ def home():
 
         )
 
-@app.route('/map', methods=['POST', 'GET'])  # Called when form is submitted for map.html
+# @app.route('/map', methods=['POST', 'GET'])  # Called when form is submitted for map.html
+# def result():
+#     date_from = request.form['start_date']  # Get the given 'from date' from the form
+#     # date_to =   request.form['date2']  # Get the given 'to date' from the form
+#     country = request.form['Country']  # Country
+#     # table_names = request.form['Continent'] 
+#     # continent = update_dict[table_names]
+#     # if date_from > date_to:  # If user gives a from date that's after to date
+#     #     # swap dates
+#     #     temp = date_from
+#     #     date_from = date_to
+#     #     date_to = temp
+
+#     # if date_from and date_to:  # If both (from and to) dates were given from the user
+#     #     # Get per day cases and deaths for the 'country' between 'date_from' and 'date_to' dates
+#     #     result = Create_database.select_data_between_dates('covid19_world', date_from, date_to,)
+#     # else:  # User selected only a country
+#     #     # Get per day cases and deaths for the 'country' for all available dates
+#     #     result = Create_database.select_total_continents(table_names)
+
+#     result2 = Create_database.country(country, date_from)  # Get total cases and deaths for 'country'
+#     result = Create_database.select_tests(country,date_from)
+
+#     if result2:
+#         date = result2[0][0]
+#         country = result2[0][1]
+#         confirmed = result2[0][2]
+#         deaths = result2[0][3]
+#         recovered = result2[0][4]
+#         active = result2[0][5]
+#     else:
+#         date = None
+#         country = None
+#         confirmed = None
+#         deaths = None
+#         recovered = None
+#         active = None
+
+#     if result:
+#         total_tests = result[0][2]
+#     else:
+#         total_tests = None
+#     return render_template(
+#         'map.html',
+#         # rlt4=result,
+#         rlt2=result2,
+#         # cntr_nms=country_names,
+#         # gl_cs_dths=global_cases_deaths,
+#         # d_from=date_from,
+#         # d_to=date_to,
+#         date = date,
+#         country = country,
+#         confirmed = confirmed,
+#         deaths = deaths,
+#         recovered = recovered,
+#         active = active,
+#         total_tests = total_tests,
+#     )
+
+from flask import request, render_template
+
+@app.route('/map.html', methods=['POST', 'GET'])
 def result():
-    date_from = request.get['start_date']  # Get the given 'from date' from the form
-    # date_to =   request.form['date2']  # Get the given 'to date' from the form
-    country = request.form.get['Country']  # Country
-    # table_names = request.form['Continent'] 
-    # continent = update_dict[table_names]
-    # if date_from > date_to:  # If user gives a from date that's after to date
-    #     # swap dates
-    #     temp = date_from
-    #     date_from = date_to
-    #     date_to = temp
+    if request.method == 'POST':
+        try:
+            print("nknj")
 
-    # if date_from and date_to:  # If both (from and to) dates were given from the user
-    #     # Get per day cases and deaths for the 'country' between 'date_from' and 'date_to' dates
-    #     result = Create_database.select_data_between_dates('covid19_world', date_from, date_to,)
-    # else:  # User selected only a country
-    #     # Get per day cases and deaths for the 'country' for all available dates
-    #     result = Create_database.select_total_continents(table_names)
+            data = request.json  # Get the JSON data from the request
+            date_from = data.get('date')  # Extract the 'date' field from the JSON data
+            country = data.get('country')  # Extract the 'country' field from the JSON data
+            print("Received date:", date_from)
+            print("Received country:", country)
 
-    result2 = Create_database.country(country, date_from)  # Get total cases and deaths for 'country'
-    result = Create_database.select_tests(country,date_from)
+            if not date_from or not country:
+                return render_template('error.html', error="Invalid request. Missing required fields."), 400
 
-    if result2:
-        date = result2[0][0]
-        country = result2[0][1]
-        confirmed = result2[0][2]
-        deaths = result2[0][3]
-        recovered = result2[0][4]
-        active = result2[0][5]
+            result2 = Create_database.country("covid19_world",country, date_from)  # Get total cases and deaths for 'country'
+            result = Create_database.select_tests(country, date_from)
+            print(result2)
+            if result2:
+                date_from = result2[0][0]
+                country = result2[0][1]
+                confirmed = result2[0][2]
+                deaths = result2[0][3]
+                recovered = result2[0][4]
+                active = result2[0][5]
+            else:
+                date_from, country, confirmed, deaths, recovered, active = (None, None, None, None, None, None)
+
+            if result:
+                total_tests = result[0][2]
+            else:
+                total_tests = None
+            
+            # Assuming confirmed, deaths, recovered, active, and total_tests are defined elsewhere
+            response_data = {
+                'date': date_from,
+                'country': country,
+                'confirmed': confirmed,
+                'deaths': deaths,
+                'recovered': recovered,
+                'active': active,
+                'total_tests': total_tests,
+            }
+
+            # Return the data as a JSON response
+            return jsonify(response_data)
+
+        except Exception as e:
+            print(f"Error: {str(e)}")  # Print the exception message
+            return render_template('error.html', error=str(e)), 500
+
+    elif request.method == 'GET':
+        # Your GET request handling logic here
+        # For example, you might want to initialize some variables or perform other operations specific to the GET request
+        # Then, render the 'map.html' template
+        return render_template('map.html')  # Change 'map.html' to your actual template file
+
     else:
-        date = None
-        country = None
-        confirmed = None
-        deaths = None
-        recovered = None
-        active = None
-
-    if result:
-        total_tests = result[0][2]
-    else:
-        total_tests = None
-    return render_template(
-        'map.html',
-        # rlt4=result,
-        rlt2=result2,
-        # cntr_nms=country_names,
-        # gl_cs_dths=global_cases_deaths,
-        # d_from=date_from,
-        # d_to=date_to,
-        date = date,
-        country = country,
-        confirmed = confirmed,
-        deaths = deaths,
-        recovered = recovered,
-        active = active,
-        total_tests = total_tests,
-    )
-
+        return 'Method Not Allowed', 405
     
 #Admin Login route
 # @app.route('/login')
@@ -131,35 +192,34 @@ def adminsignup():
 
     return render_template('adminsignup.html')
 
-@app.route('/add_entries', methods=['GET', 'POST'])
+@app.route('/add_entries.html', methods=['GET'])
+def admin_as_get():
+    return render_template('add_entries.html')
+
+@app.route('/add_entries.html', methods=['POST'])
 def adminlogin():
-    # if request.method == 'POST':
-    #     username = request.form['username']
-    #     password = request.form['password']
-    #     table_names = request.form['Continent'] 
-    #     continent = update_dict[table_names]
-    #     country = request.form['Country']
-    #     reigion = request.form['Region']
-    #     confirmed =  request.form['Confirmed Case']
-    #     deaths = request.form['Deaths']
-    #     recovered = request.form['Recovered']
-    #     active = request.form['Active Cases']
-    #     total_test = request.form['Total Tests']
-    #     population = request.form['Population']
-    #     tests_per_million = request.form['Test per Million']
-    #     test_per_person = request.form['Tests per Person']
-    #     date = request.form['Date']
-
-    #     if Create_database.correct_authentication(username, password):
-    #         # Redirect to the admin panel or handle it as needed.
-    #         # check the logic
-    #         Create_database.update(continent, date, country, reigion, confirmed, deaths, recovered, active, total_test, population, tests_per_million, test_per_person)
-        #     return render_template('dashboard2.html')
-        # else:
-        #     return render_template('add_entries.html')
-
-    return render_template('map.html')
-
+    username = request.form['username']
+    password = request.form['password']
+    table_names = request.form['Continent'] 
+    continent = update_dict[table_names]
+    country = request.form['Country']
+    reigion = request.form['Region']
+    confirmed =  request.form['Confirmed Case']
+    deaths = request.form['Deaths']
+    recovered = request.form['Recovered']
+    active = request.form['Active Cases']
+    total_test = request.form['Total Tests']
+    population = request.form['Population']
+    tests_per_million = request.form['Test per Million']
+    test_per_person = request.form['Tests per Person']
+    date = request.form['Date']
+    if Create_database.correct_authentication(username, password):
+        # Redirect to the admin panel or handle it as needed.
+        # check the logic
+        Create_database.update(continent, date, country, reigion, confirmed, deaths, recovered, active, total_test, population, tests_per_million, test_per_person)
+        return render_template('dashboard2.html')
+    else:
+        return render_template('add_entries.html')
 
 if __name__ == '__main__':
     # This should be changed later  
