@@ -85,36 +85,66 @@
             <label for="tests_per_person" class="form-label">Tests Per Person</label>
             <input type="number" class="form-control" id="tests_per_person" name="test_per_person">
     
-            <button type="submit" class="btn btn-primary" style="margin-top: 2%;">Submit</button>
+            <button type="submit" class="btn btn-primary" id="submitButton" style="margin-top: 2%;">Submit</button>
+
         </form>
     </div>
-     <pre id="result"></pre>
     <script>
-      const form = document.getElementById('data-form');
-      const resultElement = document.getElementById('result');
+      document.getElementById('data-form').addEventListener('submit', function (event) {
+          event.preventDefault(); // Prevent the default form submission
+  
+          // Retrieve form values
+          var username = document.getElementById('username').value;
+          var password = document.getElementById('exampleInputPassword1').value;
+          var tableName = document.getElementById('table_name').value;
+          var date = document.getElementById('date').value;
+          var country = document.getElementById('country').value;
+          var region = document.getElementById('region').value;
+          var confirmed = document.getElementById('confirmed').value;
+          var deaths = document.getElementById('deaths').value;
+          var recovered = document.getElementById('recovered').value;
+          var active = document.getElementById('active').value;
+          var totalTests = document.getElementById('total_tests').value;
+          var population = document.getElementById('population').value;
+          var testsPerMillion = document.getElementById('tests_per_million').value;
+          var testsPerPerson = document.getElementById('tests_per_person').value;
 
-      form.addEventListener('submit', function(event) {
-          event.preventDefault(); // Prevent the form from submitting traditionally.
-
-          const formData = new FormData(form);
-          const data = {};
-
-          formData.forEach((value, key) => {
-              data[key] = value;
+  
+          // Perform further actions or send data to the server using AJAX
+          // Example: Send form data to the server using fetch
+          fetch('http://127.0.0.1:5000/add_entries.html', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  username: username,
+                  password: password,
+                  tableName: tableName,
+                  date: date,
+                  country: country,
+                  region: region,
+                  confirmed: confirmed,
+                  deaths: deaths,
+                  recovered: recovered,
+                  active: active,
+                  totalTests: totalTests,
+                  population: population,
+                  testsPerMillion: testsPerMillion,
+                  testsPerPerson: testsPerPerson
+              })
+          })
+          .then(response => {
+              // Handle the response here
+              console.log('Request successful! Response:', response);
+          })
+          .catch(error => {
+              // Handle any errors that occur during the fetch request
+              console.error('Error:', error);
           });
-
-          // Convert the JavaScript object to JSON.
-          const jsonData = JSON.stringify(data, null, 2);
-
-          // Display the JSON data in the "result" element.
-          resultElement.textContent = jsonData;
       });
-    </script>
-    <script>
-        // JavaScript to display the current date
-        var currentDate = new Date();
-        var dateElement = document.getElementById("current-date");
-        dateElement.textContent = currentDate.toDateString();
-    </script>
+
+  </script>
+ 
 </body>
 </html>

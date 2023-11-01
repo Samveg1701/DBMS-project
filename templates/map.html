@@ -1997,11 +1997,15 @@
         var countryRecDiv = document.getElementById('country-recovered');
         var countryDeathDiv = document.getElementById('country-deaths');
 
+        var countryCases = 0; //enter query here
+        var  countryRec = 0; 
+        var countryDeath = 0; 
+
         document.getElementById('searchButton').addEventListener('click', function() {
             var dateValue = document.getElementById('start_date').value;
             var country = localStorage.getItem("countryName");
             // Perform an AJAX request using the fetch API
-            fetch('http://10.1.35.51:5000/map.html', {
+            fetch('http://127.0.0.1:5000/map.html', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -2010,8 +2014,32 @@
                 body: JSON.stringify({ date: dateValue, country: country })
             })
             .then(response => {
-                // Handle the response here
-                console.log('Request successful! Response:', response.json());
+                // Check if the response is ok
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Parse the response as JSON and return the promise
+                return response.json();
+            })
+            .then(data => {
+                // Access the data from the resolved promise
+                console.log('Data:', data);
+                // Access individual properties of the data object
+                countryCases = data.confirmed; //enter query here
+                countryRec = data.recovered; 
+                countryDeath =  data.deaths; 
+
+                countryCasesDiv.innerText = `Country Cases: ${countryCases}`;
+                countryRecDiv.innerText = `Country Recovered: ${countryRec}`;
+                countryDeathDiv.innerText = `Country Deaths: ${countryDeath}`;
+
+                console.log('Active cases:', data.active);
+                console.log('Confirmed cases:', data.confirmed);
+                console.log('Country:', data.country);
+                console.log('Date:', data.date);
+                console.log('Deaths:', data.deaths);
+                console.log('Recovered:', data.recovered);
+                console.log('Total tests:', data.total_tests);
             })
             .catch(error => {
                 // Handle any errors that occur during the fetch request
@@ -2023,19 +2051,12 @@
         svgPaths.forEach(function(path) {
             path.addEventListener('click', function(event) {
                 var countryName = event.target.getAttribute('name');
-                localStorage.setItem("countryName", countryName);
-
-                const countryCases = 100; //enter query here
-                const  countryRec = 200; 
-                const countryDeath = 300; 
 
                 if(!countryName) {
                     countryName = event.target.getAttribute('class');
                 }
 
-                countryCasesDiv.innerText = `Country Cases: ${countryCases}`;
-                countryRecDiv.innerText = `Country Recovered: ${countryRec}`;
-                countryDeathDiv.innerText = `Country Deaths: ${countryDeath}`;
+                localStorage.setItem("countryName", countryName);
             });
 
         });
