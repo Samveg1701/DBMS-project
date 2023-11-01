@@ -46,38 +46,45 @@ worldpopulation = 'C:/Users/asus/OneDrive/Desktop/University/Semester 7/DBMS/New
 # cur.execute("CREATE DATABASE Covid19_Visualization")
 
 # Read the JSON data from the file
-# with open(covid19africa, 'r') as file:
-#     covid19_africa = json.load(file)
+with open(covid19africa, 'r') as file:
+    covid19_africa = json.load(file)
 
-# # print(covid19_africa)
-# # test day wise
-# with open(covid19asia, 'r') as file:
-#     covid19_asia = json.load(file)
+# print(covid19_africa)
+# test day wise
+with open(covid19asia, 'r') as file:
+    covid19_asia = json.load(file)
 
-# with open(covid19europe, 'r') as file:
-#     covid19_europe = json.load(file)
+with open(covid19europe, 'r') as file:
+    covid19_europe = json.load(file)
 
-# with open(covid19northamerica, 'r') as file:
-#     covid19_northamerica = json.load(file)
+with open(covid19northamerica, 'r') as file:
+    covid19_northamerica = json.load(file)
 
-# with open(covid19oceania, 'r') as file:
-#     covid19_oceania = json.load(file)
+with open(covid19oceania, 'r') as file:
+    covid19_oceania = json.load(file)
 
-# with open(covid19southamerica, 'r') as file:
-#     covid19_southamerica = json.load(file)
+with open(covid19southamerica, 'r') as file:
+    covid19_southamerica = json.load(file)
 
-# with open(covid19tests, 'r') as file:
-#     covid19_tests = json.load(file)
+with open(covid19tests, 'r') as file:
+    covid19_tests = json.load(file)
 
-# with open(covid19world, 'r') as file:
-#     covid19_world = json.load(file)
+with open(covid19world, 'r') as file:
+    covid19_world = json.load(file)
 
-# with open(worldpopulation, 'r') as file:
-    # world_population = json.load(file)
-# print(world_population)
+with open(worldpopulation, 'r') as file:
+    world_population = json.load(file)
+print(world_population)
+
+# covid19_tests['United Kingdom'] = covid19_tests['UK']
+# covid19_tests['US'] = covid19_tests['USA']
 
 
-
+cur.execute("""
+UPDATE covid19_tests
+SET  country_or_other = 'United Kingdom'
+WHERE country_or_other = 'UK';
+""")
 # def authentication():
 #     cur.execute(f"DROP TABLE IF EXISTS authentication_db")
 #     cur.execute('''CREATE TABLE authentication_db (
@@ -558,12 +565,12 @@ def update(table_name, date, country, region, confirmed, deaths, recovered, acti
                 )
             )
 
-update("covid19_asia", "2020-09-14", "India", "Mumbai", 300, 20, 50, 50, 2000, 200000, 2, 20)
+# update("covid19_asia", "2020-09-14", "India", "Mumbai", 300, 20, 50, 50, 2000, 200000, 2, 20)
 # cur.execute("Select * from covid19_world where region=Mumbai ")
-# cur.execute("SELECT * FROM covid19_world WHERE region = 'Mumbai'")
+cur.execute("SELECT * FROM covid19_world WHERE region = 'Mumbai'")
 
-# result = cur.fetchall()
-# print(result)
+result = cur.fetchall()
+print(result)
 
 # result = select_tests('Finland', '2020-06-15')
 # print(result[0])

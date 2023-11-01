@@ -17,7 +17,7 @@ update_dict = {
     'World' : 'covid19_world'
 }
 
-@app.route('/dashboard2',  methods=['GET'] )  # Gets called when home page is requested
+@app.route('/dashboard2.html',  methods=['GET'] )  # Gets called when home page is requested
 def home():
     date_from = request.form['start_date']  # Get the given 'from date' from the form
     date_to =   request.form['end_date']  # Get the given 'to date' from the form
