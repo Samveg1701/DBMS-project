@@ -71,260 +71,71 @@
     </div>
 
     <!--Line Graphs: Data to be queried -->
-    <div class="graphs" style="margin-top: 2%; margin-left: 2%; margin-right: 2%;">
-      <div class="row">
-          <div class="col-sm-4 mb-3 mb-sm-0">
-              <label for="North_america">North America</label>
-              <canvas id="North_america" style="width:100%;max-width:600px"></canvas>
-              <script>
-              const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-
-              new Chart("North_america", {
-              type: "line",
-              data: {
-                  labels: xValues,
-                  datasets: [{ 
-                  data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                  borderColor: "red",
-                  fill: false
-                  }, { 
-                  data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                  borderColor: "green",
-                  fill: false
-                  }, { 
-                  data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                  borderColor: "blue",
-                  fill: false
-                  }]
-              },
-              options: {
-                  legend: {display: false}
-              }
-              });
-              </script>
-          </div>
-          <div class="col-sm-4 mb-3 mb-sm-0">
-              <label for="South_america">South America</label>
-              <canvas id="South_america" style="width:100%;max-width:700px"></canvas>
-              
-              <script>
-                  const x2Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-      
-                  new Chart("South_america", {
-                  type: "line",
-                  data: {
-                      labels: x2Values,
-                      datasets: [{ 
-                      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                      borderColor: "red",
-                      fill: false
-                      }, { 
-                      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                      borderColor: "green",
-                      fill: false
-                      }, { 
-                      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                      borderColor: "blue",
-                      fill: false
-                      }]
-                  },
-                  options: {
-                      legend: {display: false}
-                  }
-                  });
-              </script>
-          </div>
-          <div class="col-sm-4 mb-3 mb-sm-0">
-              <label for="South_america">Africa</label>
-              <canvas id="Africa" style="width:100%;max-width:700px"></canvas>
-              <script>
-                  const x3Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-      
-                  new Chart("Africa", {
-                  type: "line",
-                  data: {
-                      labels: xValues,
-                      datasets: [{ 
-                      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                      borderColor: "red",
-                      fill: false
-                      }, { 
-                      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                      borderColor: "green",
-                      fill: false
-                      }, { 
-                      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                      borderColor: "blue",
-                      fill: false
-                      }]
-                  },
-                  options: {
-                      legend: {display: false}
-                  }
-                  });
-              </script>
-          </div>
-      </div>
-      <!--row 2 of line graphs-->
-      <div class="row">
-          <div class="col-sm-4 mb-3 mb-sm-0">
-              <label for="South_america">Asia</label>
-              <canvas id="Asia" style="width:100%;max-width:600px"></canvas>
-              <script>
-              const x4Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-
-              new Chart("Asia", {
-              type: "line",
-              data: {
-                  labels: xValues,
-                  datasets: [{ 
-                  data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                  borderColor: "red",
-                  fill: false
-                  }, { 
-                  data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                  borderColor: "green",
-                  fill: false
-                  }, { 
-                  data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                  borderColor: "blue",
-                  fill: false
-                  }]
-              },
-              options: {
-                  legend: {display: false}
-              }
-              });
-              </script>
-          </div>
-          <div class="col-sm-4 mb-3 mb-sm-0">
-              <label for="Europe">Europe</label>
-              <canvas id="Europe" style="width:100%;max-width:700px"></canvas>
-              <script>
-                  const x5Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-      
-                  new Chart("Europe", {
-                  type: "line",
-                  data: {
-                      labels: x2Values,
-                      datasets: [{ 
-                      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                      borderColor: "red",
-                      fill: false
-                      }, { 
-                      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                      borderColor: "green",
-                      fill: false
-                      }, { 
-                      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                      borderColor: "blue",
-                      fill: false
-                      }]
-                  },
-                  options: {
-                      legend: {display: false}
-                  }
-                  });
-              </script>
-          </div>
-          <div class="col-sm-4 mb-3 mb-sm-0">
-              <label for="Oceania">Oceania</label>
-              <canvas id="Oceania" style="width:100%;max-width:700px"></canvas>
-              <script>
-                  const x6Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-      
-                  new Chart("Oceania", {
-                  type: "line",
-                  data: {
-                      labels: x6Values,
-                      datasets: [{ 
-                      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                      borderColor: "red",
-                      fill: false
-                      }, { 
-                      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                      borderColor: "green",
-                      fill: false
-                      }, { 
-                      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                      borderColor: "blue",
-                      fill: false
-                      }]
-                  },
-                  options: {
-                      legend: {display: true}
-                  }
-                  });
-              </script>
-          </div>
-      </div>
-      <!--row 3 of line graphs-->
-      <div class="row">
-        <div class="col-sm-4 mb-3 mb-sm-0" style="margin-inline: auto;">
-          <label for="World">World</label>
-          <canvas id="World" style="width:100%;max-width:600px"></canvas>
-          <script>
-          const x7Values = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-
-          new Chart("World", {
-          type: "line",
-          data: {
-              labels: xValues,
-              datasets: [{ 
-              data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-              borderColor: "red",
-              fill: false
-              }, { 
-              data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-              borderColor: "green",
-              fill: false
-              }, { 
-              data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-              borderColor: "blue",
-              fill: false
-              }]
-          },
-          options: {
-              legend: {display: false}
-          }
-          });
-          </script>
-        </div>
-      </div>
-      </div>
-    </div>
+    <div id="graphs"></div>
     <script>
       document.getElementById('searchButton').addEventListener('click', function() {
         var startDateValue = document.getElementById('start_date').value;
         var endDateValue = document.getElementById('end_date').value;
 
-                    // Perform an AJAX request using the fetch API
-                    fetch('http://127.0.0.1:5000/dashboard2.html', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                          // Add any other headers if required
-                      },
-                      body: JSON.stringify({ date_from: startDateValue, date_to: endDateValue })
-                  })
-                  .then(response => {
-                      // Check if the response is ok
-                      if (!response.ok) {
-                          throw new Error('Network response was not ok');
-                      }
-                      // Parse the response as JSON and return the promise
-                      return response.json();
-                  })
-                  .then(data => {
-                      // Access the data from the resolved promise
-                      // console.log('Data:', data);
-                      // Access individual properties of the data object
+        // Perform an AJAX request using the fetch API
+        fetch('http://127.0.0.1:5000/dashboard2.html', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any other headers if required
+            },
+            body: JSON.stringify({ date_from: startDateValue, date_to: endDateValue })
+        })
+        .then(response => {
+            // Check if the response is ok
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Parse the response as JSON and return the promise
+            return response.json();
+        })
+        .then(data => {
+            // Access the data from the resolved promise
+            console.log('Data:', data);
+            // Access individual properties of the data object
+            var graphsElement = document.getElementById('graphs');
+            graphsElement.innerHTML = "hello aaryan";
 
-                  })
-                  .catch(error => {
-                      // Handle any errors that occur during the fetch request
-                      console.error('Error:', error);
-                  });
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "North_america";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
+            new Chart("North_america", {
+              type: "line",
+              data: {
+                  labels: data.covid19_northamerica[0],
+                  datasets: [{ 
+                  data: data.covid19_northamerica[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_northamerica[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_northamerica[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
+
+
+        
+            })
       });  
 
 

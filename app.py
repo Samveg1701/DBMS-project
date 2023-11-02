@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import Create_database
 
 app = Flask(__name__)
@@ -17,12 +19,26 @@ update_dict = {
     'World' : 'covid19_world'
 }
 
+def parse_data(data):
+    date_array = []
+    first_value_array = []
+    second_value_array = []
+    third_value_array = []
+    fourth_value_array = []
+
+    for entry in data:
+        date_array.append(entry[0])
+        first_value_array.append(entry[1])
+        second_value_array.append(entry[2])
+        third_value_array.append(entry[3])
+        fourth_value_array.append(entry[4])
+    return [date_array, first_value_array, second_value_array, third_value_array, fourth_value_array]
+
+
 @app.route('/dashboard2.html',  methods=['POST','GET'] )  # Gets called when home page is requested
 def home():
     if request.method == 'POST':
         try:
-            print("nknjdfg")
-
             data = request.json  # Get the JSON data from the request
             date_from = data.get('date_from')  
             date_to = data.get('date_to')  
@@ -45,10 +61,29 @@ def home():
                 covid19_northamerica = Create_database.select_data_between_dates('covid19_northamerica',date_from, date_to,)
                 covid19_southamerica = Create_database.select_data_between_dates('covid19_southamerica',date_from, date_to,) 
                 # country_names = Create_database.select_total_countries()
-                result = Create_database.select_data_between_dates('covid19_world', date_from, date_to,)
-                return render_template(
-                    'dashboard2.html',
-                )
+                # covid19_world = Create_database.select_data_between_dates('covid19_world', date_from, date_to,)
+
+                # Access the data arrays for each region as needed
+                africa_date_array = parse_data(covid19_africa)
+                europe_date_array = parse_data(covid19_europe)
+                asia_date_array = parse_data(covid19_asia)
+                world_date_array = parse_data(covid19_world)
+                oceania_date_array = parse_data(covid19_oceania)
+                northamerica_date_array = parse_data(covid19_northamerica)
+                southamerica_date_array = parse_data(covid19_southamerica)
+
+                return_result = {
+                    'covid19_africa': africa_date_array,
+                    'covid19_europe': europe_date_array,
+                    'covid19_asia': asia_date_array,
+                    'covid19_world': world_date_array,
+                    'covid19_oceania': oceania_date_array,
+                    'covid19_northamerica': northamerica_date_array,
+                    'covid19_southamerica': southamerica_date_array,
+                }
+
+                return jsonify(return_result)
+            
         except Exception as e:
             print(f"Error: {str(e)}")  # Print the exception message
             return render_template('error.html', error=str(e)), 500
