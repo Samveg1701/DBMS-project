@@ -98,8 +98,94 @@
             // Access the data from the resolved promise
             console.log('Data:', data);
             // Access individual properties of the data object
-            var graphsElement = document.getElementById('graphs');
-            graphsElement.innerHTML = "hello aaryan";
+            var graphsElement = document.getElementById('graphs');            
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "africa";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            new Chart("africa", {
+              type: "line",
+              data: {
+                  labels: data.covid19_africa[0],
+                  datasets: [{ 
+                  data: data.covid19_africa[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_africa[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_africa[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "asia";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            new Chart("asia", {
+              type: "line",
+              data: {
+                  labels: data.covid19_asia[0],
+                  datasets: [{ 
+                  data: data.covid19_asia[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_asia[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_asia[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "europe";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            new Chart("europe", {
+              type: "line",
+              data: {
+                  labels: data.covid19_europe[0],
+                  datasets: [{ 
+                  data: data.covid19_europe[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_europe[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_europe[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
 
 
             // Create a canvas element for the chart
@@ -108,8 +194,6 @@
             newCanvas.style.width = "100%";
             newCanvas.style.maxWidth = "600px";
             graphsElement.appendChild(newCanvas);
-            const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-
             new Chart("North_america", {
               type: "line",
               data: {
@@ -124,6 +208,96 @@
                   fill: false
                   }, { 
                   data: data.covid19_northamerica[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
+
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "oceania";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            new Chart("oceania", {
+              type: "line",
+              data: {
+                  labels: data.covid19_oceania[0],
+                  datasets: [{ 
+                  data: data.covid19_oceania[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_oceania[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_oceania[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
+
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "South_america";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            new Chart("South_america", {
+              type: "line",
+              data: {
+                  labels: data.covid19_southamerica[0],
+                  datasets: [{ 
+                  data: data.covid19_southamerica[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_southamerica[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_southamerica[3],
+                  borderColor: "blue",
+                  fill: false
+                  }]
+              },
+              options: {
+                  legend: {display: false}
+              }
+              });
+
+
+            // Create a canvas element for the chart
+            var newCanvas = document.createElement('canvas');
+            newCanvas.id = "world";
+            newCanvas.style.width = "100%";
+            newCanvas.style.maxWidth = "600px";
+            graphsElement.appendChild(newCanvas);
+            new Chart("world", {
+              type: "line",
+              data: {
+                  labels: data.covid19_world[0],
+                  datasets: [{ 
+                  data: data.covid19_world[1],
+                  borderColor: "red",
+                  fill: false
+                  }, { 
+                  data: data.covid19_world[2],
+                  borderColor: "green",
+                  fill: false
+                  }, { 
+                  data: data.covid19_world[3],
                   borderColor: "blue",
                   fill: false
                   }]
