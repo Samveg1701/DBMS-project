@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import Create_database
+from Create_database import cur
 
 app = Flask(__name__)
 @app.route("/")
@@ -10,13 +11,13 @@ def hello_world():
 
 table_names =['covid19_africa', 'covid19_asia', 'covid19_europe', 'covid19_northamerica', 'covid19_southamerica', 'covid19_world', 'covid19_tests', 'world_population']
 update_dict = {
-    'Asia': "covid19_asia", 
-    'Africa': "covid19africa",
-    'Europe': "covid19_europe", 
-    'North America': "covid19_northamerica",
-    'South America': 'covid19_southamerica', 
-    'Oceania': 'covid19_oceania', 
-    'World' : 'covid19_world'
+    '1': "covid19_asia", 
+    '2': "covid19africa",
+    '3': "covid19_europe", 
+    '4': "covid19_northamerica",
+    '5': 'covid19_southamerica', 
+    '6': 'covid19_oceania', 
+    '7' : 'covid19_world'
 }
 
 def parse_data(data):
@@ -190,11 +191,12 @@ def admin_as_get():
 @app.route('/add_entries.html', methods=['POST'])
 def add_entries():
     data = request.json  # Retrieve JSON data from the request
-
+    print(data)
     username = data['username']
     password = data['password']
     tableName = data['tableName']
-    continent = update_dict.get(tableName)  # Assuming update_dict is a predefined dictionary
+    continent = update_dict.get(tableName)
+    print(continent)  # Assuming update_dict is a predefined dictionary
     country = data['country']
     region = data['region']
     confirmed = data['confirmed']
@@ -207,10 +209,13 @@ def add_entries():
     testsPerPerson = data['testsPerPerson']
     date = data['date']
     auth = Create_database.correct_authentication(username, password)
+    # print(auth)
     if auth==True:
         # Redirect to the admin panel or handle it as needed
         # Check the logic
-        Create_database.update(continent, date, country, region, confirmed, deaths, recovered, active, totalTests, population, testsPerMillion, testsPerPerson)
+        if request.method == 'POST':
+            Create_database.update(continent, date, country, region, confirmed, deaths, recovered, active, totalTests, population, testsPerMillion, testsPerPerson)
+            # print(result)
         return render_template('dashboard2.html')
     else:
         return render_template('add_entries.html')

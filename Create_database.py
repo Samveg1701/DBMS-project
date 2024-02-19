@@ -370,7 +370,7 @@ def correct_authentication(username, password):
     cur.execute("SELECT * FROM authentication_db WHERE username = %s AND password = %s", (username, password))
     result = cur.fetchall()
     
-    # print(result[0][0])
+    print(result[0][0])
     if result:
          return True
     else:
@@ -564,10 +564,14 @@ def update(table_name, date, country, region, confirmed, deaths, recovered, acti
                     test_per_person
                 )
             )
+    # cur.execute(f"SELECT * FROM {table_name} WHERE (region = {region} AND observation_date={date})")
+    # result = cur.fetchall()
+
+    # return result
 
 # update("covid19_asia", "2020-09-14", "India", "Mumbai", 300, 20, 50, 50, 2000, 200000, 2, 20)
 # cur.execute("Select * from covid19_world where region=Mumbai ")
-cur.execute("SELECT * FROM covid19_world WHERE region = 'Mumbai'")
+# cur.execute("SELECT * FROM covid19_asia WHERE region = 'Mumbai' AND observation_date='2020-02-20'")
 
 result = cur.fetchall()
 print(result)
@@ -576,4 +580,3 @@ print(result)
 # print(result[0])
 conn.commit()
 # conn.close()
-
